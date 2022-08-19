@@ -92,6 +92,12 @@ export async function establishConnection(): Promise<void> {
    version from the connection object. */
 
   //Insert the Step 1 code from the tutorial here
+  // Step 1: Connect to the Solana Devnet
+connection = new Connection(clusterApiUrl("devnet"),"confirmed");
+const version = await connection.getVersion();
+console.log('Connection to cluster established:', version);
+
+
 }
 
 /**
@@ -102,11 +108,20 @@ export async function establishPayer(): Promise<void> {
   //Step 2: Generate a keypair - this would be an account that pays for the calls to the program
   
   //Insert the Step 2 code from the tutorial here
-  
+  payer = Keypair.generate();
+console.log("Public Key of Payer is:", payer.publicKey);
+
   //Step 3: Requesting an airdrop
 
    //Insert the Step 3 code from the tutorial here
-   
+const sig = await connection.requestAirdrop(
+  payer.publicKey,
+  2 * LAMPORTS_PER_SOL,
+);
+
+await connection.confirmTransaction(sig);
+
+
   console.log(
     'Using account',
     payer.publicKey.toBase58(),
@@ -116,8 +131,8 @@ export async function establishPayer(): Promise<void> {
   );
 }
 
-/**
- * Check if the hello world BPF program has been deployed
+/*
+        Check if the hello world BPF program has been deployed
  */
 export async function checkProgram(): Promise<void> {
   // Read program id from keypair file
@@ -203,6 +218,8 @@ export async function sayHello(): Promise<void> {
   // STEP 4: Create an instruction to be sent to the program
   
   //Insert the Step 4 code from the tutorial here
+ 
+
 
   //STEP 5: Create a transaction to be sent to the blockchain containing the instruction
   
